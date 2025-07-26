@@ -1,0 +1,20 @@
+.left-dash-container {
+  width: 100%;
+}
+.upper-profile {
+  height: 70vh;
+  border-bottom: 1px solid black;
+}
+.bottom-profile {
+  margin: 1.5rem;
+}
+.bottom-profile ul {
+  display: flex;
+  flex-direction: column;
+}
+.bottom-profile ul li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}

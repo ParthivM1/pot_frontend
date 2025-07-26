@@ -1,0 +1,144 @@
+.billboard-report-navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #82e517;
+}
+.billboard-report-logo {
+  width: 20%;
+  display: flex;
+  gap: 12px;
+  align-self: center;
+  margin-left: 1rem;
+  font-size: 1.1rem;
+  color: white;
+  font-weight: 700;
+}
+.billboard-list {
+  width: 30%;
+}
+
+.billboard-list ul {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+.billboard-list ul li {
+  color: white;
+  font-weight: 700;
+}
+.billboard-report-container {
+  display: flex;
+}
+.left-billboard-report {
+  width: 30%;
+  height: 100vh;
+  background-color: #f9f9f9;
+  padding: 1rem;
+}
+.left-billboard-report h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+.left-billboard-report button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: #82e517;
+  color: white;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.alert-billboard {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #e1f3cf;
+  height: 300px;
+}
+.alert-billboard h2 {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.alert-billboard p {
+  margin-bottom: 1rem;
+}
+.right-billboard-report {
+  width: 70%;
+  padding: 1rem;
+}
+.right-billboard-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.right-billboard-head h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.right-billboard-head button {
+  width: 200px;
+  padding: 10px;
+  color: white;
+  font-weight: 600;
+  background-color: #82e517;
+  border-radius: 25px;
+}
+.right-billboard-details {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 2.5rem 0;
+}
+.right-billboard-img {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 1rem;
+}
+.right-billboard-img img {
+  width: 90%;
+  border-radius: 20px;
+}
+.right-billboard-img h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+.right-billboard-img p {
+  margin-bottom: 1rem;
+}
+.billboard-status {
+  width: 250px;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+}
+.billboard-status h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 1rem auto;
+}
+.status label {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+}
+.billboard-status button {
+  width: 100%;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  border-radius: 25px;
+  margin-top: 1rem;
+}

@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 90%;
+  margin: 1rem auto;
+  overflow: hidden;
+}
+.form-container {
+  position: absolute;
+  width: 90%;
+  margin: 1rem auto;
+}
+
+.head-text h1 {
+  width: 100%;
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+.head-text h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+.login-btn {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.login-btn button {
+  align-self: center;
+  width: 400px;
+  /* border: 1px solid black; */
+  margin: 0.5rem;
+  padding: 1rem;
+  border-radius: 45px;
+}
+.btn1 {
+  background-color: chartreuse;
+  border: 1px solid chartreuse;
+}
+.btn2 {
+  color: white;
+  background-color: black;
+  border: 1px solid black;
+}
+.terms {
+  position: relative;
+  text-align: center;
+  bottom: 1px;
+}

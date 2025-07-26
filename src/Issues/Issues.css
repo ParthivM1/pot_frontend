@@ -1,0 +1,254 @@
+.issue-page {
+  width: 100%;
+}
+.issue-navbar {
+  background-color: #81e315;
+}
+.issue-nav {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.issue-nav ul {
+  width: 100%;
+}
+
+.issue-nav ul li {
+  display: flex;
+  gap: 5px;
+  align-self: center;
+}
+.search {
+  background-color: #f5f5f5;
+  width: 400px;
+  height: 50px;
+  padding: 0 8px;
+  text-align: left;
+  border-radius: 20px;
+  display: flex;
+}
+.search-icon {
+  font-size: 1.3rem;
+  align-self: center;
+}
+input {
+  outline: none;
+  border: none;
+  padding: 10px;
+  font-size: 1.1rem;
+  background-color: #f5f5f5;
+}
+.nav-icon {
+  width: 15%;
+  margin-left: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+}
+.nav-icon ul {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.nav-icon ul li {
+  align-self: center;
+}
+.nav-icon ul li span {
+  font-size: 1.2rem;
+  /* align-self: center; */
+}
+.issue-container {
+}
+.issue-tab {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+.tab {
+  width: 120px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 20px;
+  background-color: #81e315;
+  color: white;
+  font-weight: 600;
+  border-color: #81e315;
+}
+table {
+  width: 100%;
+}
+
+.progress-bar {
+  width: 300px;
+  height: 41vh;
+  padding: 1.5rem;
+  border-radius: 20px;
+  max-width: 100%;
+  background-color: #a9a9a9;
+}
+.issue-table {
+  margin: 0.5rem;
+}
+/* Flex layout */
+.report-flex {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.issue-table h4 {
+  margin: 1rem;
+}
+/* Each progress card */
+.report-card {
+  flex: 1;
+  min-width: 200px;
+  /* background-color: #f2f2f2; */
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Title text */
+.report-title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+.report-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.issue-graph {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.progress-bar {
+  padding: 20px;
+  /* background: #f9f9f9; */
+}
+
+.progress-bar h4 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.report-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.report-card {
+  /* background-color: #a9a9a9; */
+  padding: 16px;
+  border-radius: 16px;
+  width: 300px;
+  box-sizing: border-box;
+}
+
+.report-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.custom-progress-container {
+  height: 14px;
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 8px 0;
+  position: relative;
+}
+
+.custom-progress-fill {
+  height: 100%;
+  background-color: #1a8745;
+  width: 0%;
+  transition: width 0.4s ease;
+  border-radius: 999px 0 0 999px;
+}
+
+.report-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+}
+.report-bar {
+  width: 100%;
+}
+/* New Code */
+.report-card {
+  background-color: #a9a9a9;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 12px;
+}
+
+.report-item {
+  width: 100%;
+}
+
+.report-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.custom-progress-container {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-progress-fill {
+  height: 100%;
+  background-color: green; /* custom green fill */
+  transition: width 0.3s ease;
+}
+
+.report-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 13px;
+}
+.logo ul li {
+  width: 100%;
+  padding-left: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.bar-graph {
+  background-color: #a9a9a9;
+  padding: 1.2rem;
+  border-radius: 20px;
+  height: 41vh;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 1px solid black;
+  background-color: #a9a9a9;
+}
+
+table th,
+table td {
+  border: 1px solid #000;
+  border-radius: 20px;
+  padding: 5px;
+}
