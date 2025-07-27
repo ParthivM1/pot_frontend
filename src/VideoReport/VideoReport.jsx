@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "./VideoReport.css"; // We will create this CSS file next
+import "./VideoReport.css";
 
 const VideoReport = () => {
   const { guid } = useParams();
@@ -26,14 +26,14 @@ const VideoReport = () => {
 
     fetchReport();
 
-    // Optional: Set up polling to check for status updates
     const interval = setInterval(() => {
-        if (reportData?.video_info.status !== 'complete') {
+        // Only poll if the component is still mounted and status is not complete
+        if (reportData && reportData.video_info.status !== 'complete') {
             fetchReport();
         }
-    }, 5000); // Check every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(interval); // Cleanup on component unmount
+    return () => clearInterval(interval);
 
   }, [guid, reportData]);
 
@@ -51,7 +51,7 @@ const VideoReport = () => {
     <div className="video-report-container">
       <h1>Video Analysis Report</h1>
       <div className="video-details">
-        <p><strong>Original File:</strong> {video_info.original_filename}</p>
+        <p><strong>Original File:</strong> {video_info.video_name}</p>
         <p><strong>Video ID:</strong> {video_info.guid}</p>
         <p><strong>Status:</strong> <span className={`status-${video_info.status}`}>{video_info.status}</span></p>
       </div>
@@ -62,8 +62,9 @@ const VideoReport = () => {
       {video_info.status === 'processing' && <p>Processing is ongoing. New frames will appear here automatically.</p>}
       
       <div className="frames-gallery">
+        {/* ** CHANGE: Limit the displayed frames to 15 ** */}
         {detected_frames.length > 0 ? (
-          detected_frames.map(frame => (
+          detected_frames.slice(0, 15).map(frame => (
             <div className="frame-card" key={frame.id}>
               <img src={frame.frame_image_url} alt={`Frame ${frame.frame_number}`} />
               <p>Frame #{frame.frame_number}</p>
