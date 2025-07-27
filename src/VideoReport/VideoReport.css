@@ -1,0 +1,40 @@
+.video-report-container {
+  width: 90%;
+  margin: 2rem auto;
+  font-family: sans-serif;
+}
+
+.video-details p {
+  font-size: 1.1rem;
+}
+
+.status-processing {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-complete {
+  color: green;
+  font-weight: bold;
+}
+
+.frames-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 1rem;
+}
+
+.frame-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  width: 300px;
+}
+
+.frame-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}

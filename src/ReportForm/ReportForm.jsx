@@ -9,6 +9,7 @@ const ReportForm = () => {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -24,17 +25,21 @@ const ReportForm = () => {
       return;
     }
 
+    setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-    // ** FIX: Append the location text to send to the backend **
-    formData.append("location", location);
-    // You can also append other form data if your backend is set up to receive it.
-    // formData.append("hazardType", hazardType);
-    // formData.append("description", description);
 
+    // Determine the endpoint based on file type
+    const isVideo = file.type.startsWith('video/');
+    const endpoint = isVideo ? '/upload_video' : '/upload';
+    
+    // For images, also append the location text
+    if (!isVideo) {
+        formData.append("location", location);
+    }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
         method: "POST",
         body: formData,
       });
@@ -42,8 +47,17 @@ const ReportForm = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Upload successful:", result);
-        alert("Report submitted successfully!");
-        navigate("/detailed");
+        
+        if (isVideo) {
+            alert(`Video upload successful! It is now being processed in the background. You can view the results shortly.`);
+            // Navigate to the new video report page
+            navigate(`/video_report/${result.video_guid}`);
+        } else {
+            alert("Report submitted successfully!");
+            // Navigate to the existing detailed dashboard
+            navigate("/detailed");
+        }
+
       } else {
         const errorResult = await response.json();
         console.error("Upload failed:", errorResult);
@@ -52,6 +66,8 @@ const ReportForm = () => {
     } catch (error) {
       console.error("There was an error uploading the file:", error);
       alert("There was an error uploading the file. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -90,15 +106,17 @@ const ReportForm = () => {
             ></textarea>
             <div className="upload">
               <label className="custom-file-input">
-                Upload Photo
-                <input type="file" id="fileInput" onChange={handleFileChange} />
+                Upload Photo or Video
+                <input type="file" id="fileInput" onChange={handleFileChange} accept="image/*,video/*" />
               </label>
               <span className="file-name" id="fileName">
                 {fileName}
               </span>
             </div>
             <div className="form-btn">
-              <button onClick={sendReport}>Submit Report</button>
+              <button onClick={sendReport} disabled={isUploading}>
+                {isUploading ? 'Uploading...' : 'Submit Report'}
+              </button>
             </div>
           </div>
         </div>
