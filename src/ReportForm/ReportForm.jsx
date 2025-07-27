@@ -104,7 +104,7 @@ const ReportForm = () => {
             <div className="upload">
               <label className="custom-file-input">
                 Upload Photo or Video
-                <input type="file" id="fileInput" onChange={handleFilechange} accept="image/*,video/*" />
+                <input type="file" id="fileInput" onChange={handleFileChange} accept="image/*,video/*" />
               </label>
               <span className="file-name" id="fileName">
                 {fileName}
