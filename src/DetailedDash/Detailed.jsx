@@ -29,16 +29,15 @@ import { useNavigate } from "react-router-dom";
 
 const Detailed = () => {
   const navigate = useNavigate();
-  // ** CHANGE: Renamed state to be more descriptive and added loading state **
   const [combinedReports, setCombinedReports] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ** CHANGE: Updated useEffect to fetch both images and videos **
+  // ** CHANGE: Updated useEffect to poll for new data **
   useEffect(() => {
     const fetchAllReports = async () => {
-      setIsLoading(true);
+      // We don't want to show the main loading spinner on background polls
+      // Only the initial fetch should set isLoading
       try {
-        // Fetch both image reports and video reports in parallel
         const [imageRes, videoRes] = await Promise.all([
           fetch(`${process.env.REACT_APP_API_URL}/reports`),
           fetch(`${process.env.REACT_APP_API_URL}/videos`),
@@ -47,11 +46,9 @@ const Detailed = () => {
         const images = await imageRes.json();
         const videos = await videoRes.json();
 
-        // Add a 'type' property to each object to distinguish them
         const formattedImages = images.map((img) => ({ ...img, type: "image" }));
         const formattedVideos = videos.map((vid) => ({ ...vid, type: "video" }));
 
-        // Combine, sort by date, and set the state
         const allReports = [...formattedImages, ...formattedVideos];
         allReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         
@@ -59,12 +56,21 @@ const Detailed = () => {
       } catch (error) {
         console.error("Error fetching reports:", error);
       } finally {
-        setIsLoading(false);
+        // Only set loading to false on the very first fetch
+        if (isLoading) {
+            setIsLoading(false);
+        }
       }
     };
 
-    fetchAllReports();
-  }, []);
+    fetchAllReports(); // Initial fetch
+
+    // Set up polling to refresh data every 10 seconds
+    const intervalId = setInterval(fetchAllReports, 10000);
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [isLoading]); // Rerun effect if isLoading changes (though it won't)
 
   const cardData = [
     {
@@ -305,7 +311,6 @@ const Detailed = () => {
                       </li>
                     </ul>
                   </div>
-                  {/* ** CHANGE: Updated rendering logic for combined reports ** */}
                   <div className="lower-card-report">
                     {isLoading ? <p>Loading reports...</p> : combinedReports.map((report) => {
                       if (report.type === 'image') {
@@ -319,7 +324,13 @@ const Detailed = () => {
                       if (report.type === 'video') {
                         return (
                           <div className="card" key={`vid-${report.id}`} onClick={() => navigate(`/video_report/${report.guid}`)}>
-                            <div className="image video-placeholder"><FaVideo size={40} /></div>
+                            <div className="image">
+                              {report.thumbnail_url ? (
+                                <img src={report.thumbnail_url} alt={report.video_name} style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "15px" }} />
+                              ) : (
+                                <div className="video-placeholder"><FaVideo size={40} /></div>
+                              )}
+                            </div>
                             <div className="card-info">
                               <ul>
                                 <li style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '0.5rem' }}><FaVideo /><span>{report.video_name}</span></li>
