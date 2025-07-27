@@ -25,30 +25,46 @@ import { IoIosCloud } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { IoAnalytics } from "react-icons/io5";
 import { FaChartSimple } from "react-icons/fa6";
-// FIX: Corrected the import from 'react--router-dom' to 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 
 const Detailed = () => {
   const navigate = useNavigate();
-  const [lowerCards, setLowerCards] = useState([]);
+  // ** CHANGE: Renamed state to be more descriptive and added loading state **
+  const [combinedReports, setCombinedReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // ** CHANGE: Updated useEffect to fetch both images and videos **
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchAllReports = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/reports`);
-        if (response.ok) {
-          const data = await response.json();
-          setLowerCards(data);
-        } else {
-          console.error("Failed to fetch reports from the server.");
-        }
+        // Fetch both image reports and video reports in parallel
+        const [imageRes, videoRes] = await Promise.all([
+          fetch(`${process.env.REACT_APP_API_URL}/reports`),
+          fetch(`${process.env.REACT_APP_API_URL}/videos`),
+        ]);
+
+        const images = await imageRes.json();
+        const videos = await videoRes.json();
+
+        // Add a 'type' property to each object to distinguish them
+        const formattedImages = images.map((img) => ({ ...img, type: "image" }));
+        const formattedVideos = videos.map((vid) => ({ ...vid, type: "video" }));
+
+        // Combine, sort by date, and set the state
+        const allReports = [...formattedImages, ...formattedVideos];
+        allReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
+        setCombinedReports(allReports);
       } catch (error) {
         console.error("Error fetching reports:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchReports();
-  }, []); 
+    fetchAllReports();
+  }, []);
 
   const cardData = [
     {
@@ -138,7 +154,6 @@ const Detailed = () => {
                 </li>
                 <li>
                   <span className="profile-img-icon">
-                    {/* FIX: Added alt prop to the image */}
                     <img src={profileIcon} alt="Profile" />
                   </span>
                 </li>
@@ -152,7 +167,6 @@ const Detailed = () => {
           <div className="left-dash-container">
             <div className="upper-profile">
               <div className="profile">
-                {/* FIX: Added alt prop to the image */}
                 <img src={profileIcon} alt="User Profile" />
                 <div className="profile-details">
                   <p>ABC user</p>
@@ -291,35 +305,32 @@ const Detailed = () => {
                       </li>
                     </ul>
                   </div>
+                  {/* ** CHANGE: Updated rendering logic for combined reports ** */}
                   <div className="lower-card-report">
-                    {lowerCards.map((card) => (
-                      <div
-                        className="card"
-                        key={card.id}
-                        onClick={() => navigate(`/potholereport/${card.guid}`)}
-                      >
-                        <div className="image">
-                          <img
-                            src={card.image_url}
-                            alt={card.image_name}
-                            style={{
-                              width: "100%",
-                              height: "100px",
-                              objectFit: "cover",
-                              borderRadius: "15px",
-                            }}
-                          />
-                        </div>
-                        <div className="card-info">
-                          <ul>
-                            <li style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '0.5rem' }}>
-                              <FaFile />
-                              <span>{card.image_name}</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    ))}
+                    {isLoading ? <p>Loading reports...</p> : combinedReports.map((report) => {
+                      if (report.type === 'image') {
+                        return (
+                          <div className="card" key={`img-${report.id}`} onClick={() => navigate(`/potholereport/${report.guid}`)}>
+                            <div className="image"><img src={report.image_url} alt={report.image_name} style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "15px" }} /></div>
+                            <div className="card-info"><ul><li style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '0.5rem' }}><FaFile /><span>{report.image_name}</span></li></ul></div>
+                          </div>
+                        );
+                      }
+                      if (report.type === 'video') {
+                        return (
+                          <div className="card" key={`vid-${report.id}`} onClick={() => navigate(`/video_report/${report.guid}`)}>
+                            <div className="image video-placeholder"><FaVideo size={40} /></div>
+                            <div className="card-info">
+                              <ul>
+                                <li style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '0.5rem' }}><FaVideo /><span>{report.video_name}</span></li>
+                                <li style={{ color: report.status === 'processing' ? 'orange' : 'green', fontWeight: 'bold' }}>Status: {report.status}</li>
+                              </ul>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
                   </div>
                 </div>
               </div>

@@ -29,11 +29,9 @@ const ReportForm = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    // Determine the endpoint based on file type
     const isVideo = file.type.startsWith('video/');
     const endpoint = isVideo ? '/upload_video' : '/upload';
     
-    // For images, also append the location text
     if (!isVideo) {
         formData.append("location", location);
     }
@@ -49,12 +47,11 @@ const ReportForm = () => {
         console.log("Upload successful:", result);
         
         if (isVideo) {
-            alert(`Video upload successful! It is now being processed in the background. You can view the results shortly.`);
-            // Navigate to the new video report page
-            navigate(`/video_report/${result.video_guid}`);
+            alert(`Video upload successful! It is now being processed. You will be redirected to the dashboard.`);
+            // ** FIX: Navigate to the detailed dashboard **
+            navigate(`/detailed`);
         } else {
             alert("Report submitted successfully!");
-            // Navigate to the existing detailed dashboard
             navigate("/detailed");
         }
 
@@ -107,7 +104,7 @@ const ReportForm = () => {
             <div className="upload">
               <label className="custom-file-input">
                 Upload Photo or Video
-                <input type="file" id="fileInput" onChange={handleFileChange} accept="image/*,video/*" />
+                <input type="file" id="fileInput" onChange={handleFilechange} accept="image/*,video/*" />
               </label>
               <span className="file-name" id="fileName">
                 {fileName}
