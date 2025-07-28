@@ -1,3 +1,4 @@
+// src/FrameReport/FrameReport.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GiRoad } from "react-icons/gi";
@@ -29,7 +30,8 @@ const FrameReport = () => {
     }
   };
 
-  const updateStatus = async (newStatus) => {
+  const updateStatus = async (clickedStatus) => {
+    const newStatus = frame.status === clickedStatus ? 'In Progress' : clickedStatus;
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/frame/${frame_id}/status`, {
         method: 'PATCH',
@@ -73,9 +75,24 @@ const FrameReport = () => {
         <div className="right-pothole-report">
           <h1>Related Actions</h1>
           <div className="pothole-button">
-            <button onClick={() => updateStatus('Follow-up Inspection')}>Follow-up Inspection</button>
-            <button onClick={() => updateStatus('Repair Crew Sent')}>Send Repair Crew</button>
-            <button onClick={() => updateStatus('Closed')}>Close Report</button>
+            <button 
+              onClick={() => updateStatus('Follow-up Inspection')}
+              className={frame.status === 'Follow-up Inspection' ? 'selected' : ''}
+            >
+              Follow-up Inspection
+            </button>
+            <button 
+              onClick={() => updateStatus('Repair Crew Sent')}
+              className={frame.status === 'Repair Crew Sent' ? 'selected' : ''}
+            >
+              Send Repair Crew
+            </button>
+            <button 
+              onClick={() => updateStatus('Closed')}
+              className={frame.status === 'Closed' ? 'selected' : ''}
+            >
+              Close Report
+            </button>
           </div>
         </div>
       </div>

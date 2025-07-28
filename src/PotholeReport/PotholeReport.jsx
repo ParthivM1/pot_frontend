@@ -1,3 +1,4 @@
+// src/PotholeReport/PotholeReport.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GiRoad } from "react-icons/gi";
@@ -29,7 +30,8 @@ const PotholeReport = () => {
     }
   };
 
-  const updateStatus = async (newStatus) => {
+  const updateStatus = async (clickedStatus) => {
+    const newStatus = report.status === clickedStatus ? 'In Progress' : clickedStatus;
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}/status`, {
         method: 'PATCH',
@@ -37,7 +39,6 @@ const PotholeReport = () => {
         body: JSON.stringify({ status: newStatus }),
       });
       if (response.ok) {
-        // Optimistically update the UI or refetch data
         setReport(prevReport => ({ ...prevReport, status: newStatus }));
       }
     } catch (error) {
@@ -74,9 +75,24 @@ const PotholeReport = () => {
         <div className="right-pothole-report">
           <h1>Related Actions</h1>
           <div className="pothole-button">
-            <button onClick={() => updateStatus('Follow-up Inspection')}>Follow-up Inspection</button>
-            <button onClick={() => updateStatus('Repair Crew Sent')}>Send Repair Crew</button>
-            <button onClick={() => updateStatus('Closed')}>Close Report</button>
+            <button 
+              onClick={() => updateStatus('Follow-up Inspection')}
+              className={report.status === 'Follow-up Inspection' ? 'selected' : ''}
+            >
+              Follow-up Inspection
+            </button>
+            <button 
+              onClick={() => updateStatus('Repair Crew Sent')}
+              className={report.status === 'Repair Crew Sent' ? 'selected' : ''}
+            >
+              Send Repair Crew
+            </button>
+            <button 
+              onClick={() => updateStatus('Closed')}
+              className={report.status === 'Closed' ? 'selected' : ''}
+            >
+              Close Report
+            </button>
           </div>
         </div>
       </div>

@@ -84,3 +84,25 @@
   background-color: white;
   margin-bottom: 1rem;
 }
+
+.pothole-button button {
+  width: 200px;
+  padding: 10px;
+  text-align: left;
+  border-radius: 10px;
+  background-color: white;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pothole-button button:hover {
+  background-color: #f0f0f0;
+}
+
+.pothole-button button.selected {
+  background-color: #82e517;
+  color: white;
+  border-color: #82e517;
+}
