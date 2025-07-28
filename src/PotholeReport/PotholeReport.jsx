@@ -1,4 +1,3 @@
-// src/PotholeReport/PotholeReport.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GiRoad } from "react-icons/gi";
@@ -17,29 +16,37 @@ const PotholeReport = () => {
   }, [guid]);
 
   const fetchReportData = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/report/${guid}`
+      );
       if (response.ok) {
         const data = await response.json();
         setReport(data);
+      } else {
+        setReport(null);
       }
     } catch (error) {
       console.error("Error fetching report:", error);
+      setReport(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateStatus = async (clickedStatus) => {
-    const newStatus = report.status === clickedStatus ? 'In Progress' : clickedStatus;
+  const updateStatus = async (newStatus) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/report/${guid}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
       if (response.ok) {
-        setReport(prevReport => ({ ...prevReport, status: newStatus }));
+        fetchReportData();
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -52,7 +59,10 @@ const PotholeReport = () => {
   return (
     <>
       <div className="pothole-navbar">
-        {/* Navbar content... */}
+        <div className="pothole-logo">
+          <GiRoad size={50} />
+          <span>Pothole Patrol</span>
+        </div>
       </div>
       <div className="pothole-report-container">
         <div className="left-pothole-report">
@@ -63,9 +73,12 @@ const PotholeReport = () => {
             </div>
             <div className="pothole-report-desc">
               <p>Reported by: Alex Johnson</p>
-              <p>Location: {report.location || report.location_text || "Not Available"}</p>
+              <p>
+                Location:{" "}
+                {report.location || report.location_text || "Not Available"}
+              </p>
               <p>Date: {new Date(report.created_at).toLocaleDateString()}</p>
-              <p>Status: {report.status || 'In Progress'}</p>
+              <p>Status: {report.status || "In Progress"}</p>
             </div>
           </div>
           <div className="pothole-report-map">
@@ -75,21 +88,23 @@ const PotholeReport = () => {
         <div className="right-pothole-report">
           <h1>Related Actions</h1>
           <div className="pothole-button">
-            <button 
-              onClick={() => updateStatus('Follow-up Inspection')}
-              className={report.status === 'Follow-up Inspection' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Follow-up Inspection")}
+              className={
+                report.status === "Follow-up Inspection" ? "selected" : ""
+              }
             >
               Follow-up Inspection
             </button>
-            <button 
-              onClick={() => updateStatus('Repair Crew Sent')}
-              className={report.status === 'Repair Crew Sent' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Repair Crew Sent")}
+              className={report.status === "Repair Crew Sent" ? "selected" : ""}
             >
               Send Repair Crew
             </button>
-            <button 
-              onClick={() => updateStatus('Closed')}
-              className={report.status === 'Closed' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Closed")}
+              className={report.status === "Closed" ? "selected" : ""}
             >
               Close Report
             </button>

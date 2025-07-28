@@ -1,4 +1,3 @@
-// src/FrameReport/FrameReport.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GiRoad } from "react-icons/gi";
@@ -12,34 +11,42 @@ const FrameReport = () => {
 
   useEffect(() => {
     if (frame_id) {
-        fetchFrameData();
+      fetchFrameData();
     }
   }, [frame_id]);
 
   const fetchFrameData = async () => {
+    setIsLoading(true);
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/frame/${frame_id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setFrame(data);
-        }
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/frame/${frame_id}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setFrame(data);
+      } else {
+        setFrame(null);
+      }
     } catch (error) {
-        console.error("Error fetching frame data:", error);
+      console.error("Error fetching frame data:", error);
+      setFrame(null);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const updateStatus = async (clickedStatus) => {
-    const newStatus = frame.status === clickedStatus ? 'In Progress' : clickedStatus;
+  const updateStatus = async (newStatus) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/frame/${frame_id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/frame/${frame_id}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
       if (response.ok) {
-        setFrame(prevFrame => ({ ...prevFrame, status: newStatus }));
+        fetchFrameData();
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -52,20 +59,26 @@ const FrameReport = () => {
   return (
     <>
       <div className="pothole-navbar">
-        {/* Navbar content... */}
+        <div className="pothole-logo">
+          <GiRoad size={50} />
+          <span>Pothole Patrol</span>
+        </div>
       </div>
       <div className="pothole-report-container">
         <div className="left-pothole-report">
           <h1>Pothole Report - Frame #{frame.frame_number}</h1>
           <div className="pothole-details">
             <div className="pothole-details-img">
-              <img src={frame.frame_image_url} alt={`Frame ${frame.frame_number}`} />
+              <img
+                src={frame.frame_image_url}
+                alt={`Frame ${frame.frame_number}`}
+              />
             </div>
             <div className="pothole-report-desc">
-              <p>Source Video: {frame.videos.video_name}</p>
+              <p>Source Video: {frame.videos?.video_name || "N/A"}</p>
               <p>Date Captured: {new Date(frame.created_at).toLocaleDateString()}</p>
               <p>Frame Number: {frame.frame_number}</p>
-              <p>Status: {frame.status || 'In Progress'}</p>
+              <p>Status: {frame.status || "In Progress"}</p>
             </div>
           </div>
           <div className="pothole-report-map">
@@ -75,21 +88,23 @@ const FrameReport = () => {
         <div className="right-pothole-report">
           <h1>Related Actions</h1>
           <div className="pothole-button">
-            <button 
-              onClick={() => updateStatus('Follow-up Inspection')}
-              className={frame.status === 'Follow-up Inspection' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Follow-up Inspection")}
+              className={
+                frame.status === "Follow-up Inspection" ? "selected" : ""
+              }
             >
               Follow-up Inspection
             </button>
-            <button 
-              onClick={() => updateStatus('Repair Crew Sent')}
-              className={frame.status === 'Repair Crew Sent' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Repair Crew Sent")}
+              className={frame.status === "Repair Crew Sent" ? "selected" : ""}
             >
               Send Repair Crew
             </button>
-            <button 
-              onClick={() => updateStatus('Closed')}
-              className={frame.status === 'Closed' ? 'selected' : ''}
+            <button
+              onClick={() => updateStatus("Closed")}
+              className={frame.status === "Closed" ? "selected" : ""}
             >
               Close Report
             </button>
