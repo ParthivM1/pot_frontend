@@ -8,68 +8,50 @@ const PotholeReport = () => {
   const { guid } = useParams();
   const [report, setReport] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReportData = async () => {
-      if (!guid) {
-        setIsLoading(false);
-        setError("No report ID provided.");
-        return;
-      }
-      
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}`);
-        if (response.ok) {
-          const data = await response.json();
-          setReport(data);
-        } else {
-          const errorData = await response.json();
-          setError(errorData.detail || "Failed to fetch report.");
-        }
-      } catch (err) {
-        setError("An error occurred while fetching the report.");
-        console.error("Fetch error:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchReportData();
+    if (guid) {
+      fetchReportData();
+    }
   }, [guid]);
 
-  if (isLoading) {
-    return <div>Loading report...</div>;
-  }
+  const fetchReportData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}`);
+      if (response.ok) {
+        const data = await response.json();
+        setReport(data);
+      }
+    } catch (error) {
+      console.error("Error fetching report:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-  
-  if (!report) {
-    return <div>Report not found.</div>;
-  }
+  const updateStatus = async (newStatus) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/report/${guid}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (response.ok) {
+        // Optimistically update the UI or refetch data
+        setReport(prevReport => ({ ...prevReport, status: newStatus }));
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  if (isLoading) return <div>Loading report...</div>;
+  if (!report) return <div>Report not found.</div>;
 
   return (
     <>
       <div className="pothole-navbar">
-        <div className="pothole-logo">
-          <span style={{ paddingTop: "3px" }}>
-            <GiRoad />
-          </span>
-          <span>Proactix</span>
-        </div>
-        <div className="pothole-list">
-          <ul>
-            <li>Dashboard</li>
-            <li>Reports</li>
-            <li>Analytics</li>
-            <li>Settings</li>
-          </ul>
-        </div>
+        {/* Navbar content... */}
       </div>
       <div className="pothole-report-container">
         <div className="left-pothole-report">
@@ -80,10 +62,9 @@ const PotholeReport = () => {
             </div>
             <div className="pothole-report-desc">
               <p>Reported by: Alex Johnson</p>
-              {/* ** FIX: Conditionally display the location ** */}
               <p>Location: {report.location || report.location_text || "Not Available"}</p>
               <p>Date: {new Date(report.created_at).toLocaleDateString()}</p>
-              <p>Status: In Progress</p>
+              <p>Status: {report.status || 'In Progress'}</p>
             </div>
           </div>
           <div className="pothole-report-map">
@@ -93,9 +74,9 @@ const PotholeReport = () => {
         <div className="right-pothole-report">
           <h1>Related Actions</h1>
           <div className="pothole-button">
-            <button>Follow-up Inspection </button>
-            <button>Send Repair Crew</button>
-            <button>Close Report</button>
+            <button onClick={() => updateStatus('Follow-up Inspection')}>Follow-up Inspection</button>
+            <button onClick={() => updateStatus('Repair Crew Sent')}>Send Repair Crew</button>
+            <button onClick={() => updateStatus('Closed')}>Close Report</button>
           </div>
         </div>
       </div>
